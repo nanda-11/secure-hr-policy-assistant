@@ -1,52 +1,54 @@
-🔐 Secure HR Policy Assistant
+# 🔐 Secure HR Policy Assistant
 
-Encrypted, Role-Aware Retrieval-Augmented Generation using CyborgDB
+**Encrypted, Role-Aware Retrieval-Augmented Generation using CyborgDB**
 
-📌 Overview
+---
 
-This project demonstrates a secure internal HR policy assistant that allows employees to query HR policies in natural language without exposing sensitive information such as salary bands, performance calibration details, or workforce reduction plans.
+## 📌 Overview
 
-Unlike traditional RAG systems that store embeddings in plaintext vector databases (which are vulnerable to inversion attacks), this system uses CyborgDB’s encrypted vector search combined with role-based access control (RBAC) to ensure that:
+This project demonstrates a secure internal HR policy assistant that allows employees to query HR policies in natural language **without exposing sensitive information** such as salary bands, performance calibration details, or workforce reduction plans.
 
-Sensitive policy data is never stored or queried in plaintext
+Unlike traditional RAG systems that store embeddings in plaintext vector databases (which are vulnerable to inversion attacks), this system uses **CyborgDB’s encrypted vector search combined with role-based access control (RBAC)** to ensure that:
 
-Users can only retrieve content they are authorized to see
+* Sensitive policy data is never stored or queried in plaintext
+* Users can only retrieve content they are authorized to see
+* The language model never receives unauthorized context
 
-The language model never receives unauthorized context
+This project was built as a **realistic enterprise prototype** suitable for HR, legal, healthcare, and finance use cases.
 
-This project was built as a realistic enterprise prototype suitable for HR, legal, healthcare, and finance use cases.
+---
 
-🎯 Problem Statement
+## 🎯 Problem Statement
 
-Most enterprise AI assistants today rely on plaintext vector databases. If these databases are compromised, embeddings can be reverse-engineered to recover sensitive internal documents.
+Most enterprise AI assistants today rely on plaintext vector databases.
+If these databases are compromised, embeddings can be reverse-engineered to recover sensitive internal documents.
 
-Security and compliance teams therefore block many RAG deployments.
+As a result, **security and compliance teams often block RAG deployments**.
 
-Our goal was to prove that:
+### Our goal was to prove that:
 
-Encrypted vector search
+* **Encrypted vector search**
+* Combined with **role-aware retrieval**
 
-Combined with role-aware retrieval
+can enable **secure RAG without sacrificing usability or performance**.
 
-Can enable secure RAG without sacrificing usability or performance
+---
 
-✅ Solution Highlights
+## ✅ Solution Highlights
 
-🔐 Encrypted vector storage and search using CyborgDB
+* 🔐 Encrypted vector storage and search using **CyborgDB**
+* 👥 Role-based access control enforced **before LLM invocation**
+* 🧠 Retrieval-Augmented Generation (RAG) using **LangChain**
+* ⚡ Fast, local embeddings via **Hugging Face**
+* 🤖 LLM responses via **Groq**, with graceful fallback on rate limits
+* 📄 Secure ingestion of **PDF and DOCX** HR policies
+* 📊 Benchmarking against a plaintext vector store (**Chroma**)
 
-👥 Role-based access control enforced at the application layer
+---
 
-🧠 Retrieval-Augmented Generation (RAG) using LangChain
+## 🧱 Architecture
 
-⚡ Fast, local embeddings using Hugging Face models
-
-🤖 LLM responses via Groq, with graceful fallback on rate limits
-
-📄 Document ingestion via PDF and DOCX uploads
-
-📊 Benchmarking against a plaintext vector store (Chroma)
-
-🧱 Architecture
+```
 User (Streamlit UI)
         ↓
 Role Selection (RBAC)
@@ -60,71 +62,111 @@ Authorized Context Only
 Groq LLM (or fallback)
         ↓
 Final Answer
+```
 
+**Key design choice:**
+Authorization is enforced **before** the LLM is invoked.
+The model **never sees data it shouldn’t**.
 
-Key design choice:
-Authorization is enforced before the LLM is invoked. The model never sees data it shouldn’t.
+---
 
-🧑‍💼 Supported Roles & Access Levels
-Role	Accessible Policy Levels
-Intern	Public
-Employee	Public, Employee
-Manager	Public, Employee, Manager
-HR	Public, Employee, Manager, Confidential
-📄 Policy Types
+## 🧑‍💼 Supported Roles & Access Levels
 
-The system supports realistic HR handbook content, including:
+| Role     | Accessible Policy Levels                |
+| -------- | --------------------------------------- |
+| Intern   | Public                                  |
+| Employee | Public, Employee                        |
+| Manager  | Public, Employee, Manager               |
+| HR       | Public, Employee, Manager, Confidential |
 
-Public: office hours, dress code, safety guidelines
+---
 
-Employee: leave policies, performance reviews, remote work
+## 📄 Policy Types
 
-Manager: salary recommendations, calibration processes
+The system supports realistic HR handbook content:
 
-Confidential: executive compensation, layoffs, severance plans
+* **Public** — office hours, dress code, safety guidelines
+* **Employee** — leave policies, performance reviews, remote work
+* **Manager** — salary recommendations, calibration processes
+* **Confidential** — executive compensation, layoffs, severance plans
 
-Each policy is chunked, embedded locally, encrypted, and stored in CyborgDB.
+Each policy is:
 
-🛠️ Tech Stack
-Layer	Technology
-Frontend	Streamlit
-Orchestration	LangChain
-Vector DB	CyborgDB (encrypted)
-Embeddings	sentence-transformers/all-MiniLM-L6-v2
-LLM	Groq (llama-3.3-70b)
-Document Parsing	pdfplumber, python-docx
-Benchmarking	Python + ThreadPoolExecutor
-🚀 Getting Started
-1️⃣ Clone the repository
-git clone <repo-url>
-cd CyborgDB
+* Chunked
+* Embedded locally
+* Encrypted
+* Stored securely in CyborgDB
 
-2️⃣ Create and activate virtual environment
+---
+
+## 🛠️ Tech Stack
+
+| Layer         | Technology                             |
+| ------------- | -------------------------------------- |
+| Frontend      | Streamlit                              |
+| Orchestration | LangChain                              |
+| Vector DB     | CyborgDB (encrypted)                   |
+| Embeddings    | sentence-transformers/all-MiniLM-L6-v2 |
+| LLM           | Groq (llama-3.3-70b)                   |
+| Doc Parsing   | pdfplumber, python-docx                |
+| Benchmarking  | Python + ThreadPoolExecutor            |
+
+---
+
+## 🚀 Getting Started
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/nanda-11/secure-hr-policy-assistant.git
+cd secure-hr-policy-assistant
+```
+
+---
+
+### 2️⃣ Create & Activate Virtual Environment
+
+```bash
 python -m venv venv
 source venv/bin/activate
+```
 
-3️⃣ Install dependencies
+---
+
+### 3️⃣ Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
-4️⃣ Configure environment variables
+---
 
-Create a .env file:
+### 4️⃣ Configure Environment Variables
 
+Create a `.env` file:
+
+```env
 CYBORGDB_URL=http://localhost:8000
 CYBORGDB_API_KEY=your_api_key
 CYBORGDB_INDEX_KEY=your_32_byte_hex_key
 GROQ_API_KEY=your_groq_key
+```
 
-🐳 Running CyborgDB (Local)
+---
+
+## 🐳 Running CyborgDB Locally
+
+```bash
 docker run -d \
   --name cyborgdb \
   -p 8000:8000 \
   -e CYBORGDB_API_KEY=your_api_key \
   cyborginc/cyborgdb-service:latest
+```
 
+### Create the Encrypted Index
 
-Create the encrypted index:
-
+```bash
 curl -X POST http://localhost:8000/v1/indexes/create \
   -H "X-API-Key: your_api_key" \
   -H "Content-Type: application/json" \
@@ -138,80 +180,77 @@ curl -X POST http://localhost:8000/v1/indexes/create \
       "nlist": 1
     }
   }'
+```
 
-▶️ Run the App
+---
+
+## ▶️ Run the Application
+
+```bash
 streamlit run app.py
+```
 
-📊 Performance Evaluation
+---
+
+## 📊 Performance Evaluation
 
 We benchmarked encrypted retrieval against a plaintext vector store.
 
-Plaintext (Chroma)
-p50: 0.001s
-p95: 0.002s
-p99: 0.002s
+### Plaintext (Chroma)
 
-Encrypted (CyborgDB)
-p50: 1.36s
-p95: 2.24s
-p99: 2.83s
+* p50: **0.001s**
+* p95: **0.002s**
+* p99: **0.002s**
 
+### Encrypted (CyborgDB)
 
-Result:
+* p50: **1.36s**
+* p95: **2.24s**
+* p99: **2.83s**
+
+✅ **Result:**
 Encrypted search adds latency but remains well within acceptable bounds for enterprise HR workflows.
 
-🔐 Security Guarantees
+---
 
-Embeddings are encrypted at rest and during search
+## 🔐 Security Guarantees
 
-No plaintext vectors stored in the database
+* Embeddings encrypted at rest and during search
+* No plaintext vectors stored in the database
+* RBAC enforced before LLM invocation
+* Graceful degradation during LLM rate limits
+* No sensitive data leakage to unauthorized users
 
-RBAC enforced before LLM invocation
+---
 
-Graceful degradation if LLM rate limits are reached
-
-No sensitive data leakage to unauthorized users
-
-🧪 Demo Scenarios
+## 🧪 Demo Scenarios
 
 Ask the same question under different roles:
 
-“How is workforce reduction planning handled?”
+**“How is workforce reduction planning handled?”**
 
-Intern → ❌ Access denied
+* Intern → ❌ Access denied
+* Employee → ❌ Access denied
+* Manager → ❌ Access denied
+* HR → ✅ Answered
 
-Employee → ❌ Access denied
+This clearly demonstrates **secure, role-aware retrieval**.
 
-Manager → ❌ Access denied
+---
 
-HR → ✅ Answered
+## 🌍 Broader Applications
 
-This visibly demonstrates secure, role-aware retrieval.
+This pattern extends beyond HR:
 
-🌍 Broader Applications
+* **Legal & Compliance** — contracts, NDAs, privileged clauses
+* **Healthcare** — role-restricted clinical documentation
+* **Finance** — confidential financial data
+* **Enterprise SaaS** — encrypted, role-aware AI assistants
 
-While demonstrated for HR, this pattern applies to:
+---
 
-Legal & Compliance — contracts, NDAs, privileged clauses
+## 🏁 Final Note
 
-Healthcare — role-restricted clinical documentation
+This project demonstrates that **secure, encrypted RAG is practical today** — and that **CyborgDB unlocks AI use cases that are otherwise blocked by security and compliance constraints**.
 
-Finance — multi-tenant, confidential financial data
-
-Enterprise SaaS — encrypted, role-aware AI assistants
-
-🔮 Future Work
-
-OAuth-based authentication instead of manual role selection
-
-Tenant-level cryptographic isolation
-
-Hybrid local LLM fallback (Ollama)
-
-Audit logging and compliance reporting
-
-Answer caching to reduce token usage
-
-🏁 Final Note
-
-This project shows that secure, encrypted RAG is practical today — and that CyborgDB enables AI use cases that are otherwise blocked by security and compliance concerns.
+---
